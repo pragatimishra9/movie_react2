@@ -6,7 +6,6 @@ class Movie(models.Model):
     title = models.CharField(max_length=500)
     description = models.TextField()
     image = models.ImageField(upload_to="movie_images")
-    views = models.IntegerField(default=0)
 
 
 class MovieView(models.Model):

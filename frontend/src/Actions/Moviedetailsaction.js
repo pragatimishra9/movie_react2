@@ -2,7 +2,7 @@ import Request from './Request';
 import axios from 'axios';
 import { config } from './Constants';
 
-export async function GetMovieDetails(id, setMovie, setTags) {
+export async function GetMovieDetails(id, setMovie, setTags, setViews) {
     let username = localStorage.getItem("userEmail")
     let data = { id, username };
     const body = JSON.stringify(data);
@@ -11,4 +11,5 @@ export async function GetMovieDetails(id, setMovie, setTags) {
     console.log(res.data.tags)
     setMovie(res.data.movie);
     setTags(res.data.tags);
+    setViews(res.data.views.length);
 }

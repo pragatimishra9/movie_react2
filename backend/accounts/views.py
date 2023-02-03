@@ -3,7 +3,12 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, MovieSerializer, TagSerializer
+from .serializers import (
+    UserSerializer,
+    MovieSerializer,
+    TagSerializer,
+    MovieViewSerializer,
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
@@ -116,8 +121,6 @@ class MovieDetails(APIView):
         movie = Movie.objects.get(pk=id)
         check_view = MovieView.objects.filter(user=user, movie=movie)
         if len(check_view) == 0:
-            movie.views += 1
-            movie.save()
             ins = MovieView(user=user, movie=movie)
             ins.save()
         serializer = MovieSerializer(movie)
@@ -126,7 +129,13 @@ class MovieDetails(APIView):
         tags = Tag.objects.filter(movies=movie)
         serializer2 = TagSerializer(tags, many=True)
 
-        res = {"movie": serializer.data, "tags": serializer2.data}
+        serializer3 = MovieViewSerializer(check_view, many=True)
+
+        res = {
+            "movie": serializer.data,
+            "tags": serializer2.data,
+            "views": serializer3.data,
+        }
 
         return Response(res)
 

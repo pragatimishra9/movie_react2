@@ -18,13 +18,14 @@ function Moviecard() {
     const { id } = useParams();
     const theme = useTheme();
     const [tags, setTags] = React.useState([]);
+    const [views, setViews] = React.useState("");
     const [movie, setMovie] = React.useState([{
         "title": "title", "description": "description", "views": "views", "image": "image"
     }]);
 
     React.useEffect(() => {
-        GetMovieDetails(id, setMovie, setTags);
-    }, [setMovie, id])
+        GetMovieDetails(id, setMovie, setTags, setViews);
+    }, [setMovie, id, setTags, setViews])
 
     return (
         <div>
@@ -41,7 +42,7 @@ function Moviecard() {
                     </CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
                         <IconButton>
-                            <Person2Icon /> {movie.views}
+                            <Person2Icon /> {views}
                         </IconButton>
                         <Stack direction="row" spacing={1}>
                             {tags.map((tag) => {
