@@ -7,6 +7,8 @@ import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Person2Icon from '@mui/icons-material/Person2';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import Navbar from './Navbar';
 import { useParams } from 'react-router-dom';
 import { GetMovieDetails } from '../Actions/Moviedetailsaction';
@@ -15,12 +17,13 @@ import { BASE_URL } from '../Actions/Constants';
 function Moviecard() {
     const { id } = useParams();
     const theme = useTheme();
+    const [tags, setTags] = React.useState([]);
     const [movie, setMovie] = React.useState([{
         "title": "title", "description": "description", "views": "views", "image": "image"
     }]);
 
     React.useEffect(() => {
-        GetMovieDetails(id, setMovie);
+        GetMovieDetails(id, setMovie, setTags);
     }, [setMovie, id])
 
     return (
@@ -40,6 +43,14 @@ function Moviecard() {
                         <IconButton>
                             <Person2Icon /> {movie.views}
                         </IconButton>
+                        <Stack direction="row" spacing={1}>
+                            {tags.map((tag) => {
+                                return (
+                                    <Chip label={tag.name} variant="outlined" />
+                                )
+                            })}
+
+                        </Stack>
 
                     </Box>
                 </Box>
@@ -50,6 +61,7 @@ function Moviecard() {
                     alt="Live from space album cover"
                 />
             </Card>
+
         </div>
 
     );

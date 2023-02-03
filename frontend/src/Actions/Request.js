@@ -3,6 +3,7 @@ const Request = {
     auth: `${BASE_URL}api/v1/accounts`,
     movies: `${BASE_URL}api/v1/movies`,
     movieDetails: `${BASE_URL}api/v1/movie`,
+    tags: `${BASE_URL}api/v1/tag`,
 
 }
 export default Request;

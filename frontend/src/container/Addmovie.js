@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Navbar from '../Component/Navbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 import { Link } from 'react-router-dom';
-import { AddMovies } from '../Actions/Addmovieaction';
+import { AddMovies, GetTags } from '../Actions/Addmovieaction';
 
 function Addmovie() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState();
     const [message, setMessage] = useState("");
+    const [tags, setTags] = useState([]);
+    const [addedTags, setAddedTags] = useState([]);
+
+    useEffect(() => {
+        GetTags(setTags);
+    }, [setTags, GetTags]);
+
+    function handleCheckboxClick(e) {
+
+        const val = e.target.value;
+        const check = e.target.checked;
+        if (check) {
+            setAddedTags((pre) => [...pre, val]);
+        } else {
+            setAddedTags((pre) => {
+                return [...pre.filter((off) => off !== val)];
+            })
+        }
+        console.log(addedTags);
+    }
+
+
     return (
         <div>
             <Navbar />
@@ -58,9 +84,17 @@ function Addmovie() {
                             style={{ margin: "24px" }}
                             onChange={(e) => { setImage(e.target.files[0]) }}
                         />
+                        <FormGroup style={{ margin: "24px" }}>
+                            {tags.map((tag) => {
+                                return (
+                                    <FormControlLabel control={<Checkbox value={tag.id} onChange={handleCheckboxClick} />} label={tag.name} />
+                                );
+                            })}
+
+                        </FormGroup>
 
                     </div>
-                    <Button style={{ backgroundColor: "#00192F", color: "white", margin: "24px" }} onClick={() => { AddMovies(title, description, image, setMessage) }}>Add Movie</Button>
+                    <Button style={{ backgroundColor: "#00192F", color: "white", margin: "24px" }} onClick={() => { AddMovies(title, description, image, addedTags, setMessage) }}>Add Movie</Button>
                     <span>{message}</span>
                 </Box>
             </Grid>

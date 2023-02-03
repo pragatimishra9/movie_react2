@@ -5,32 +5,40 @@ import Grid from '@mui/material/Grid';
 import Navbar from '../Component/Navbar';
 import MediaCard from '../Component/MediaCard';
 import { GetMovies } from '../Actions/Homeaction';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
     const [movies, setMovies] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         GetMovies(setMovies);
     }, [setMovies])
-    return (
-        <div>
-            <Navbar />
-            <Box sx={{ flexGrow: 1 }}>
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-                    {movies.map((movie) => {
-                        return (
-                            <Grid item xs={4} >
-                                <MediaCard id={movie.id} image={movie.image} title={movie.title} description={movie.description} />
-                            </Grid>
-                        )
-                    })}
+    if (localStorage.getItem("isAutenticated")) {
+        return (
+            <div>
+                <Navbar />
+                <Box sx={{ flexGrow: 1 }}>
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+
+                        {movies.map((movie) => {
+                            return (
+                                <Grid item xs={4} >
+                                    <MediaCard id={movie.id} image={movie.image} title={movie.title} description={movie.description} />
+                                </Grid>
+                            )
+                        })}
 
 
-                </Grid>
-            </Box>
+                    </Grid>
+                </Box>
 
-        </div>
-    )
+            </div>
+        )
+    } else {
+        navigate("/signin");
+    }
+
 }
 
 export default Home

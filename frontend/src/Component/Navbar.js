@@ -11,7 +11,7 @@ function Navbar() {
         localStorage.clear();
         navigate("/")
     }
-    if (localStorage.getItem("isAutenticated")) {
+    if (localStorage.getItem("isAutenticated") && (localStorage.getItem("superuser") === "true")) {
         return (
             <div className="App">
                 <AppBar position='static'>
@@ -23,14 +23,30 @@ function Navbar() {
                         </Typography>
 
 
-
+                        <Link href="/addtag"><Button style={{ backgroundColor: "#01193F", color: "white", margin: "10px" }}>Add Tags</Button></Link>
                         <Link href="/addmovie"><Button style={{ backgroundColor: "#00192F", color: "white", margin: "10px" }}>Add Movies</Button></Link>
                         <Button style={{ backgroundColor: "#EF476F", color: "white", margin: "10px" }} onClick={handleLogout}>Logout</Button>
                     </Toolbar>
                 </AppBar>
             </div>
         );
-    } else {
+    } else if (localStorage.getItem("isAutenticated")) {
+        return (
+            <div className="App">
+                <AppBar position='static'>
+                    <Toolbar>
+
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            <Link href="/" underline="none" sx={{ color: "white" }}> Movies</Link>
+
+                        </Typography>
+                        <Button style={{ backgroundColor: "#EF476F", color: "white", margin: "10px" }} onClick={handleLogout}>Logout</Button>
+                    </Toolbar>
+                </AppBar>
+            </div>
+        );
+    }
+    else {
         return (
             <div className="App">
                 <AppBar position='static'>

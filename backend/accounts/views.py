@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, MovieSerializer
+from .serializers import UserSerializer, MovieSerializer, TagSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
@@ -67,6 +67,10 @@ class Accounts(APIView):
                     "username": user.username,
                     "message": "user logged in",
                 }
+                if user.is_superuser:
+                    res["superuser"] = True
+                else:
+                    res["superuser"] = False
             else:
                 res = {
                     "status": 404,
@@ -85,11 +89,20 @@ class MoviesList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = MovieSerializer(data=request.data)
-        print(request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "movie added"})
+        title = request.data["title"]
+        desc = request.data["description"]
+        image = request.data["image"]
+
+        ins = Movie(title=title, description=desc, image=image)
+        ins.save()
+        tags = request.data["tags"].split(",")
+        if len(tags) > 0 and tags[0] != "":
+            tags = Tag.objects.filter(pk__in=tags)
+            for tag in tags:
+                tag.movies.add(ins)
+                tag.save()
+
+        return Response({"message": "movie added"})
 
 
 class MovieDetails(APIView):
@@ -105,9 +118,28 @@ class MovieDetails(APIView):
         if len(check_view) == 0:
             movie.views += 1
             movie.save()
-            ins = MovieView(user=user,movie=movie)
+            ins = MovieView(user=user, movie=movie)
             ins.save()
         serializer = MovieSerializer(movie)
-       # print(serializer.data)
+        # print(serializer.data)
 
+        tags = Tag.objects.filter(movies=movie)
+        serializer2 = TagSerializer(tags, many=True)
+
+        res = {"movie": serializer.data, "tags": serializer2.data}
+
+        return Response(res)
+
+
+class TagList(APIView):
+    def get(self, request):
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        title = request.data["name"]
+        ins = Tag(name=title)
+        ins.save()
+        res = {"message": "tag added successfully"}
+        return Response(res)

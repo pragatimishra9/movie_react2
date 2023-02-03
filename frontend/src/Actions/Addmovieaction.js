@@ -4,14 +4,12 @@ import { config } from './Constants';
 
 
 
-export async function AddMovies(title, description, image, setMessage) {
-
-
+export async function AddMovies(title, description, image, addedTags, setMessage) {
     const formData = new FormData()
     formData.append("title", title)
     formData.append("description", description)
     formData.append("image", image, image.name)
-
+    formData.append('tags', addedTags)
     const config2 = {
         headers: {
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
@@ -20,5 +18,10 @@ export async function AddMovies(title, description, image, setMessage) {
     }
     const res = await axios.post(Request.movies, formData, config2);
     setMessage(res.data.message)
+}
 
+
+export async function GetTags(setTags) {
+    const res = await axios.get(Request.tags, config);
+    setTags(res.data)
 }

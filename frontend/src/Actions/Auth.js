@@ -30,7 +30,8 @@ export async function Authenticate(email, password, type, setMessage, navigate, 
             localStorage.setItem('isAutenticated', true);
             localStorage.setItem('user', res.data.name);
             localStorage.setItem('userEmail', res.data.username);
-            navigate("/addmovie");
+            localStorage.setItem('superuser', res.data.superuser)
+            navigate("/");
         }
     }
 }

@@ -12,3 +12,8 @@ class Movie(models.Model):
 class MovieView(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+    movies = models.ManyToManyField(Movie)
