@@ -11,5 +11,5 @@ export async function GetMovieDetails(id, setMovie, setTags, setViews) {
     console.log(res.data.tags)
     setMovie(res.data.movie);
     setTags(res.data.tags);
-    setViews(res.data.views.length);
+    setViews(res.data.views);
 }
