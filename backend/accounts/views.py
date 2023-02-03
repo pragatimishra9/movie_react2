@@ -134,7 +134,7 @@ class MovieDetails(APIView):
         res = {
             "movie": serializer.data,
             "tags": serializer2.data,
-            "views": serializer3.data,
+            "views": len(serializer3.data),
         }
 
         return Response(res)
